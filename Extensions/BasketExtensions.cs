@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Controllers.DTOs;
 using API.Entities;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace FitStoreAPI.Extensions
 {
@@ -27,6 +27,13 @@ namespace FitStoreAPI.Extensions
                     Quantity = item.Quantity
                 }).ToList()
             };
+        }
+
+        public static IQueryable<Basket> RetriveBasketWithItems(this IQueryable<Basket> query, string buyerId)
+        {
+            return query.Include(i => i.Items)
+                .ThenInclude(p => p.Product)
+                .Where(b => b.BuyerId == buyerId);
         }
     }
 }
