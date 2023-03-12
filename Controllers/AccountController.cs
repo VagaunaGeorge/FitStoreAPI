@@ -6,6 +6,7 @@ using API.Controllers.DTOs;
 using API.Data;
 using API.Entities;
 using API.Services;
+using FitStoreAPI.Entities;
 using FitStoreAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -89,6 +90,16 @@ namespace API.Controllers
                 Basket=userBasket?.MapBasketToDto()
             };
         }
+
+        [HttpGet("savedAddress")]
+        public async Task<ActionResult<UserAddress>> GetSavedAddress()
+        {
+            return await _userManager.Users
+                .Where(x=> x.UserName == User.Identity.Name)
+                .Select(user => user.Address)
+                .FirstOrDefaultAsync();
+        }
+
         private async Task<Basket> RetriveBasket(string buyerId)
         {
             if (string.IsNullOrEmpty(buyerId))
